@@ -1,0 +1,49 @@
+COPY womens_clothing_e_commerce_reviews_clean
+FROM 'ur file path'
+CSV HEADER
+DELIMITER ','
+QUOTE '"'
+ENCODING 'UTF-8';
+ALTER TABLE womens_clothing_e_commerce_reviews_clean ALTER COLUMN "title" TYPE TEXT;
+SELECT * FROM womens_clothing_e_commerce_reviews_clean;
+TRUNCATE womens_clothing_e_commerce_reviews;
+DROP TABLE womens_clothing_e_commerce_reviews;
+ALTER TABLE womens_clothing_e_commerce_reviews_clean RENAME TO woman;
+---------------------------------
+SELECT * FROM woman;
+SELECT clothing_id, COUNT (*) AS "Количество" FROM woman GROUP BY clothing_id ORDER BY "Количество" DESC;
+SELECT * FROM woman WHERE clothing_id = 1078;
+SELECT division_name, COUNT (*) AS "Количество" FROM woman GROUP BY division_name ORDER BY "Количество" DESC;
+SELECT department_name, COUNT (*) AS "Количество" FROM woman GROUP BY department_name ORDER BY "Количество" DESC;
+SELECT division_name, department_name, class_name, COUNT (*) AS "Количество" FROM woman
+GROUP BY division_name, department_name, class_name ORDER BY "Количество" DESC;
+SELECT title, COUNT (*) AS "Количество" FROM woman GROUP BY title ORDER BY "Количество" DESC;
+SELECT ROUND(AVG(age)) as "Average age" FROM woman;
+SELECT age, COUNT (*) AS "Количество" FROM woman GROUP BY age ORDER BY "Количество" DESC;
+SELECT CASE WHEN age < 20 THEN 'До 20 лет'
+WHEN age > 20 AND age < 30 THEN 'От 20 до 30'
+WHEN age > 30 AND age < 40 THEN 'От 30 до 40'
+WHEN age > 40 AND age < 50 THEN 'От 40 до 50'
+WHEN age > 50 AND age < 60 THEN 'От 50 до 60'
+ELSE 'Более 60'END AS "Типы возраста", COUNT (*) AS "Количество" 
+FROM woman GROUP BY "Типы возраста" ORDER BY "Количество" DESC;
+
+SELECT class_name, COUNT (*) AS "Количество" FROM woman GROUP BY class_name ORDER BY "Количество" DESC;
+SELECT clothing_id, COUNT (*) AS "Количество" FROM woman GROUP BY clothing_id ORDER BY "Количество" DESC;
+SELECT * FROM woman WHERE clothing_id = 1078;
+SELECT division_name,COUNT (*) AS "Количество" FROM woman WHERE clothing_id = 1078
+GROUP BY division_name ORDER BY "Количество" DESC;
+SELECT ROUND(AVG(rating), 1) AS "Средняя оценка" FROM woman;
+SELECT ROUND(AVG(positive_feedback_count), 1) AS "Average positive feedback" FROM woman;
+SELECT recommended_ind, COUNT (*) AS "Количество" FROM woman GROUP BY recommended_ind ORDER BY "Количество" DESC;
+SELECT MAX(positive_feedback_count ) FROM woman;
+SELECT * FROM woman WHERE positive_feedback_count = 122;
+SELECT clothing_id, COUNT (*) AS "Количество" FROM woman WHERE review_text ILIKE '%small%' OR review_text ILIKE '%fit'OR review_text ILIKE '%large%'
+GROUP BY clothing_id ORDER BY "Количество" DESC;
+SELECT * FROM woman WHERE clothing_id  = 1078;
+SELECT COUNT (*) FROM woman;
+SELECT CASE WHEN rating >=4 THEN 'Хорошие отзывы'
+WHEN rating <=3 THEN 'Плохие отзывы' END AS "Тип", COUNT (*) AS "Количество", AVG (positive_feedback_count) AS "Средняя помощь отзыва", 
+ROUND (COUNT (*) / SUM(COUNT (*)) OVER () * 100.0 , 2) AS "Количество от общего"
+FROM woman GROUP BY "Тип" ORDER BY "Средняя помощь отзыва";
+SELECT department_name, ROUND(AVG(rating), 2) AS "Средний рейтинг" FROM woman WHERE department_name IS NOT NULL GROUP BY department_name ORDER BY "Средний рейтинг" DESC;
